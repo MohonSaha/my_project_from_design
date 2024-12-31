@@ -10,6 +10,14 @@ import Image from "next/image";
 import { TbHomePlus } from "react-icons/tb";
 import ImageUploader from "@/components/ImageUploader/ImageUploader";
 import ToggleSwitch from "@/components/ImageUploader/ImageUploader";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Home() {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -180,6 +188,7 @@ export default function Home() {
           </label>
         </div>
       </div> */}
+
       {/* image start */}
       <div className="mb-8 w-full">
         <h2 className="text-md mb-4 font-semibold text-gray-600">Images</h2>
@@ -247,8 +256,9 @@ export default function Home() {
         )}
       </div>
       {/* image end */}
+
       {/* RERA Registration Section */}
-      <div className="w-full p-4 border border-gray-300 rounded-md shadow-sm flex items-center justify-between">
+      <div className="mb-8 w-full p-4 border border-gray-300 rounded-md shadow-sm flex items-center justify-between">
         <label className=" text-sm font-semibold text-gray-700">
           Is the project RERA registered?
         </label>
@@ -282,7 +292,7 @@ export default function Home() {
       </div>
 
       {/* Landmark Section */}
-      <div className="mb-6 mt-40 border border-gray-300 py-4 px-3 rounded-md">
+      {/* <div className="mb-6 border border-gray-300 py-4 px-3 rounded-md">
         <h2 className="text-xl font-medium mb-4">Landmarks</h2>
         {landmarks.map((landmark, index) => (
           <div key={index} className="grid grid-cols-3 gap-4 mb-4">
@@ -312,8 +322,206 @@ export default function Home() {
         <Button variant="outline" onClick={addLandmark}>
           Add Landmark
         </Button>
+      </div> */}
+
+      {/* Landmark Section-2 */}
+      {/* <form className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-md space-y-4">
+        <div>
+          <label
+            htmlFor="landmark"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Landmark
+          </label>
+          <select
+            id="landmark"
+            name="landmark"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          >
+            <option>Park</option>
+            <option>Mall</option>
+            <option>School</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="distance"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Distance
+          </label>
+          <input
+            type="number"
+            id="distance"
+            name="distance"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            placeholder="Enter distance"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            rows={3}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            placeholder="Enter description"
+          ></textarea>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="latitude"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Latitude
+            </label>
+            <input
+              type="text"
+              id="latitude"
+              name="latitude"
+              readOnly
+              value="18.53235134767711"
+              className="mt-1 block w-full rounded-md bg-gray-100 border-gray-300 shadow-sm sm:text-sm"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="longitude"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Longitude
+            </label>
+            <input
+              type="text"
+              id="longitude"
+              name="longitude"
+              readOnly
+              value="73.85593414306642"
+              className="mt-1 block w-full rounded-md bg-gray-100 border-gray-300 shadow-sm sm:text-sm"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Submit
+        </button>
+      </form> */}
+
+      <form className="w-full mx-auto p-6 bg-white shadow rounded-lg space-y-6 border border-gray-300 mb-6">
+        <div className="flex justify-between gap-2">
+          {/* Landmark Dropdown */}
+          <div className="space-y-1 w-full">
+            <label
+              htmlFor="landmark"
+              className="text-sm font-medium text-gray-700 ml-1"
+            >
+              Landmark
+            </label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a landmark" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="park">Park</SelectItem>
+                <SelectItem value="mall">Mall</SelectItem>
+                <SelectItem value="school">School</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Distance Input */}
+          <div className="space-y-1 w-full">
+            <label
+              htmlFor="distance"
+              className="text-sm font-medium text-gray-700 ml-1"
+            >
+              Distance
+            </label>
+            <Input
+              type="number"
+              id="distance"
+              placeholder="Enter distance"
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        {/* Description Textarea */}
+        <div className="space-y-1">
+          <label
+            htmlFor="description"
+            className="text-sm font-medium text-gray-700 ml-1"
+          >
+            Description
+          </label>
+          <Textarea
+            id="description"
+            placeholder="Enter description"
+            rows={6}
+            className="w-full"
+          />
+        </div>
+
+        {/* Latitude and Longitude */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label
+              htmlFor="latitude"
+              className="text-sm font-medium text-gray-700"
+            >
+              Latitude
+            </label>
+            <Input
+              type="text"
+              id="latitude"
+              value="18.53235134767711"
+              readOnly
+              className="bg-gray-100"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="longitude"
+              className="text-sm font-medium text-gray-700"
+            >
+              Longitude
+            </label>
+            <Input
+              type="text"
+              id="longitude"
+              value="73.85593414306642"
+              readOnly
+              className="bg-gray-100"
+            />
+          </div>
+        </div>
+      </form>
+
+      <hr />
+      <div className="flex justify-between items-center mt-4">
+        <Button type="submit" className=" bg-indigo-600 hover:bg-indigo-700">
+          Previous
+        </Button>
+        <Button type="submit" className=" bg-indigo-600 hover:bg-indigo-700">
+          Submit
+        </Button>
       </div>
-      <Button variant="secondary">Submit</Button>
     </div>
   );
 }
