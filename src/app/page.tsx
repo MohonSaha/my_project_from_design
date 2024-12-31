@@ -1,101 +1,319 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
+import { TbHomePlus } from "react-icons/tb";
+import ImageUploader from "@/components/ImageUploader/ImageUploader";
+import ToggleSwitch from "@/components/ImageUploader/ImageUploader";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
+  const [isRERARegistered, setIsRERARegistered] = useState<string>("yes");
+  const [landmarks, setLandmarks] = useState([
+    { landmark: "", distance: "", description: "" },
+  ]);
+  const [images, setImages] = useState<ImageType[]>([]);
+  const [isRegistered, setIsRegistered] = useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const amenities = [
+    "School in vicinity",
+    "Adjoining Metro Station",
+    "Peaceful vicinity",
+    "Near City Center",
+    "Safe & Secure Locality",
+    "Desperate Sale",
+    "Breakthrough Price",
+    "Quick Deal",
+    "Investment Opportunity",
+    "High Rental Yield",
+    "Affordable",
+    "Reputed Builder",
+    "Well Ventilated",
+    "Fully Renovated",
+    "Vastu Compliant",
+    "Spacious",
+    "Ample Parking",
+    "Free Hold",
+    "Gated Society",
+    "Tasteful Interior",
+    "Prime Location",
+    "Luxury Lifestyle",
+    "Well Maintained",
+    "Plenty of Sunlight",
+    "Newly Built",
+    "Family",
+    "Bachelors",
+    "Females Only",
+  ];
+
+  const handleAmenityChange = (amenity: string) => {
+    setSelectedAmenities((prev: string[]) => {
+      if (prev.includes(amenity)) {
+        return prev.filter((item) => item !== amenity);
+      } else {
+        return [...prev, amenity];
+      }
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedAmenities.length === amenities.length) {
+      setSelectedAmenities([]);
+    } else {
+      setSelectedAmenities(amenities);
+    }
+  };
+
+  const handleFileUpload = (event: any) => {
+    const files = Array.from(event.target.files);
+    const newImages = files.map((file) => URL.createObjectURL(file));
+    setUploadedImages((prev) => [...prev, ...newImages]);
+  };
+
+  const handleLandmarkChange = (
+    index: number,
+    field: string,
+    value: string
+  ) => {
+    const updatedLandmarks = [...landmarks];
+    updatedLandmarks[index][field] = value;
+    setLandmarks(updatedLandmarks);
+  };
+
+  const addLandmark = () => {
+    setLandmarks((prev) => [
+      ...prev,
+      { landmark: "", distance: "", description: "" },
+    ]);
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("clicked");
+    const files = event.target.files;
+    if (!files) return;
+
+    const newImages = Array.from(files).map((file) =>
+      URL.createObjectURL(file)
+    );
+
+    if (newImages.length + images.length > 5) {
+      alert("You can only upload a maximum of 5 images");
+      return;
+    }
+
+    setImages((prevImages) => [...prevImages, ...newImages]);
+  };
+
+  const removeImage = (indexToRemove: number) => {
+    setImages((prevImages) =>
+      prevImages.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  return (
+    <div className=" max-w-screen-md p-10">
+      <h1 className="text-2xl font-semibold mb-0">Update Amenities</h1>
+      <p className="mb-6 text-slate-600">
+        Fill out the amenities below about this new project
+      </p>
+      <div className="px-6 mt-8">
+        <Progress
+          value={(selectedAmenities.length / amenities.length) * 100}
+          className="mb-2 bg-red-200"
+        />
+        <p className="mb-4 text-gray-600">
+          {Math.round((selectedAmenities.length / amenities.length) * 100)}%
+          Complete
+        </p>
+      </div>
+      <hr />
+      <div className="flex justify-between items-center my-4">
+        <h2 className="text-xl font-bold">Amenities</h2>
+        <Button variant="outline" onClick={handleSelectAll}>
+          {selectedAmenities.length === amenities.length
+            ? "Deselect All"
+            : "Select All"}
+        </Button>
+      </div>
+      <hr />
+      <div className="grid grid-cols-3 gap-4 mb-6 mt-10">
+        {amenities.map((amenity) => (
+          <label
+            key={amenity}
+            className="flex items-center space-x-2 cursor-pointer "
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <Checkbox
+              // checked={selectedAmenities.includes(amenity)}
+              onCheckedChange={() => handleAmenityChange(amenity)}
+              className={` rounded-full border-pink-500 border-[1.5px] ${
+                selectedAmenities.includes(amenity) ? "bg-green-300" : ""
+              }`}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <span>{amenity}</span>
+          </label>
+        ))}
+      </div>
+      {/* <div className="mb-80">
+        <h2 className="text-md mb-4 font-semibold text-gray-600">Images</h2>
+        <div className="border-2 border-dashed border-gray-300 p-4 py-6 rounded-lg text-center w-2/3">
+          <label htmlFor="image-upload" className="cursor-pointer">
+            <div className="text-center w-full"></div>
+            <div className="text-gray-500 flex flex-col justify-center items-center">
+              <TbHomePlus className="text-6xl text-gray-400" />
+              <p className="mt-2"> Click or drag images here to upload</p>
+            </div>
+            <input
+              type="file"
+              id="image-upload"
+              multiple
+              accept="image/*"
+              // onChange={handleImageUpload}
+              className="hidden"
+            />
+          </label>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div> */}
+      {/* image start */}
+      <div className="mb-8 w-full">
+        <h2 className="text-md mb-4 font-semibold text-gray-600">Images</h2>
+        <div className="border-2 border-dashed border-gray-300 p-4 py-6 rounded-lg text-center w-2/3">
+          {images.length < 5 && (
+            <label htmlFor="image-upload" className="cursor-pointer">
+              <div className="text-gray-500 flex flex-col justify-center items-center">
+                <TbHomePlus className="text-6xl text-gray-400" />
+                <p className="mt-2">Click drag images here to upload</p>
+              </div>
+              <input
+                type="file"
+                id="image-upload"
+                multiple
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+            </label>
+          )}
+        </div>
+
+        {images.length > 0 && (
+          <div className="mt-6 ">
+            <div className=" rounded-md grid grid-cols-2 gap-4">
+              {images.map((image, index) => (
+                <div
+                  key={index}
+                  className="relative rounded-xl overflow-hidden border border-gray-300 bg-gray-100 py-2 px-2 "
+                >
+                  <Image
+                    src={image}
+                    alt={`Uploaded preview ${index}`}
+                    width={800}
+                    height={500}
+                    className="w-full h-36 object-cover rounded-md"
+                  />
+                  <button
+                    onClick={() => removeImage(index)}
+                    className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+                  >
+                    &times;
+                  </button>
+
+                  <div className="flex justify-between mt-4 py-2 px-2">
+                    <div>
+                      <p className="mb-2">Description</p>
+                      <Input
+                        placeholder="Add Label"
+                        // value={landmark.landmark}
+                        // onChange={(e) =>
+                        //   handleLandmarkChange(index, "landmark", e.target.value)
+                        // }
+                      />
+                    </div>
+                    <div>
+                      <p className="mb-3">Set Primary</p>
+                      <ToggleSwitch />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      {/* image end */}
+      {/* RERA Registration Section */}
+      <div className="w-full p-4 border border-gray-300 rounded-md shadow-sm flex items-center justify-between">
+        <label className=" text-sm font-semibold text-gray-700">
+          Is the project RERA registered?
+        </label>
+        <div className="flex items-center space-x-6">
+          {/* Yes Radio Button */}
+          <label className="flex items-center space-x-2">
+            <input
+              type="radio"
+              name="reraRegistration"
+              value="yes"
+              className="w-4 h-4 border-pink-500 border"
+              checked={isRegistered === "yes"}
+              onChange={() => setIsRegistered("yes")}
+            />
+            <span className="text-gray-700">Yes</span>
+          </label>
+
+          {/* No Radio Button */}
+          <label className="flex items-center space-x-2 ">
+            <input
+              type="radio"
+              name="reraRegistration"
+              value="no"
+              className="w-4 h-4 border-pink-500 border"
+              checked={isRegistered === "no"}
+              onChange={() => setIsRegistered("no")}
+            />
+            <span className="text-gray-700">No</span>
+          </label>
+        </div>
+      </div>
+
+      {/* Landmark Section */}
+      <div className="mb-6 mt-40 border border-gray-300 py-4 px-3 rounded-md">
+        <h2 className="text-xl font-medium mb-4">Landmarks</h2>
+        {landmarks.map((landmark, index) => (
+          <div key={index} className="grid grid-cols-3 gap-4 mb-4">
+            <Input
+              placeholder="Landmark"
+              value={landmark.landmark}
+              onChange={(e) =>
+                handleLandmarkChange(index, "landmark", e.target.value)
+              }
+            />
+            <Input
+              placeholder="Distance"
+              value={landmark.distance}
+              onChange={(e) =>
+                handleLandmarkChange(index, "distance", e.target.value)
+              }
+            />
+            <Input
+              placeholder="Description"
+              value={landmark.description}
+              onChange={(e) =>
+                handleLandmarkChange(index, "description", e.target.value)
+              }
+            />
+          </div>
+        ))}
+        <Button variant="outline" onClick={addLandmark}>
+          Add Landmark
+        </Button>
+      </div>
+      <Button variant="secondary">Submit</Button>
     </div>
   );
 }
