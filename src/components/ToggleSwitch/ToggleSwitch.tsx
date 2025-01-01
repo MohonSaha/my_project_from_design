@@ -1,4 +1,3 @@
-// ToggleSwitch.tsx
 import { useState } from "react";
 
 export default function ToggleSwitch() {
